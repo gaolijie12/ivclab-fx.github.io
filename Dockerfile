@@ -1,5 +1,11 @@
 FROM ruby:slim
 
+# 一次性写入全部清华源（main + updates + security）
+RUN echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ trixie main" > /etc/apt/sources.list && \
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ trixie-updates main" >> /etc/apt/sources.list && \
+    echo "deb https://mirrors.tuna.tsinghua.edu.cn/debian-security trixie-security main" >> /etc/apt/sources.list
+
+RUN apt-get update -y && apt-get install -y --no-install-recommends build-essential curl git imagemagick inotify-tools
 # uncomment these if you are having this issue with the build:
 # /usr/local/bundle/gems/jekyll-4.3.4/lib/jekyll/site.rb:509:in `initialize': Permission denied @ rb_sysopen - /srv/jekyll/.jekyll-cache/.gitignore (Errno::EACCES)
 # ARG GROUPID=901
