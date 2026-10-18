@@ -1,0 +1,207 @@
+/* Publications page — reference style (year-grouped, larger title, Paper / Project Page links) */
+/* Scoped to .publications so it does not leak onto other pages. */
+
+/* Palette (dark teal / grey, works in both light and dark mode) */
+:root {
+  --pub-year-color: #0f6b5b;   /* dark teal for year headings */
+}
+
+/* ── Year headings ─────────────────────────────────────────────── */
+.publications h2.bibliography {
+  color: var(--pub-year-color);
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  border: none;
+  letter-spacing: 0.02em;
+}
+
+/* ── Bibliography list: remove default <ol> styling ───────────── */
+.publications .bibliography {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.publications .bibliography > li {
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Publication entry ─────────────────────────────────────────── */
+.publications .pubitem {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--global-divider-color);
+}
+
+.publications .pubitem:last-of-type {
+  border-bottom: none;
+}
+
+/* Title — larger than before */
+.publications .pubtitle {
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--global-text-color);
+  margin-bottom: 0.5rem;
+  line-height: 1.45;
+}
+
+/* Authors — all shown, no truncation */
+.publications .pubauthors {
+  color: var(--global-text-color-light);
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.publications .pubauthors em {
+  color: var(--global-text-color);
+  font-style: italic;
+}
+
+/* Author links — black instead of theme colour */
+.publications .pubauthors a {
+  color: var(--global-text-color);
+  border-bottom: 1px dashed var(--global-text-color-light);
+  text-decoration: none;
+}
+
+.publications .pubauthors a:hover {
+  border-bottom: 1px solid var(--global-text-color);
+  text-decoration: none;
+}
+
+/* ── Action links: Paper + Project Page (plain inline links) ────── */
+.publications .publinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+}
+
+.publications .publink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--global-theme-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.publications .publink i {
+  font-size: 0.9em;
+}
+
+.publications .publink:hover {
+  text-decoration: underline;
+}
+
+/* ── Hidden expandable panels (Abs / Award / BibTeX) ──────────────
+   The layout marks panels .hidden; JS on the publications page
+   toggles .open on click. */
+.publications .abstract.hidden,
+.publications .award.hidden,
+.publications .bibtex.hidden,
+.publications .video-embed.hidden {
+  display: none;
+}
+
+.publications .abstract.hidden.open,
+.publications .award.hidden.open,
+.publications .bibtex.hidden.open,
+.publications .video-embed.hidden.open {
+  display: block;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid var(--global-divider-color);
+  background: color-mix(in srgb, var(--global-theme-color) 4%, transparent);
+  border-radius: 2px;
+  font-size: 0.85rem;
+  overflow-x: auto;
+}
+
+/* Hide the theme's duplicate page description on the publications page
+   (we render description + search box together in .pub-header instead) */
+.post-description {
+  display: none;
+}
+
+/* ── Page header: description + search box side by side ────────── */
+.publications .pub-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.publications .pub-description {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--global-text-color-light);
+  flex-shrink: 0;
+}
+
+.publications .pub-header input#bibsearch {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--global-divider-color);
+  border-radius: 0;
+  background: var(--global-bg-color);
+  color: var(--global-text-color);
+  font-size: 0.9rem;
+  font-family: inherit;
+  margin: 0;
+}
+
+.publications .pub-header input#bibsearch:focus {
+  outline: none;
+  border-color: var(--global-text-color);
+}
+
+/* ── Filter buttons ────────────────────────────────────────────── */
+.publications .pub-filter-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.publications .pub-filter-btn {
+  border: 1px solid var(--global-text-color);
+  background: transparent;
+  color: var(--global-text-color);
+  padding: 0.55rem 1.25rem;
+  border-radius: 0;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  line-height: 1;
+}
+
+.publications .pub-filter-btn:hover {
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+}
+
+.publications .pub-filter-btn.active {
+  background: var(--global-text-color);
+  color: var(--global-bg-color);
+  border-color: var(--global-text-color);
+}
+
+/* ── Hidden / filter state ─────────────────────────────────────── */
+.publications .bibliography > li.pub-filter-hidden {
+  display: none;
+}

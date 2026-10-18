@@ -1,0 +1,118 @@
+---
+---
+
+{%- assign kw_classes = entry.keywords | downcase | replace: ',', ' ' | strip -%}
+<div class="pubitem {{ kw_classes }}">
+
+  <!-- Title -->
+  <div class="pubtitle">{{ entry.title }}</div>
+
+  <!-- Authors (all shown, no truncation) -->
+  <div class="pubauthors">
+    {%- for author in entry.author_array -%}
+      {% assign author_is_self = false %}
+      {%- assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' -%}
+      {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
+      {% if site.scholar.last_name contains author_last_name %}
+        {% if site.scholar.first_name contains author.first %}
+          {% assign author_is_self = true %}
+        {% endif %}
+      {%- endif -%}
+      {% assign coauthor_url = null %}
+      {%- assign clean_last_name = author_last_name | downcase | remove_accents -%}
+      {% if site.data.coauthors[clean_last_name] %}
+        {%- for coauthor in site.data.coauthors[clean_last_name] -%}
+          {% if coauthor.firstname contains author.first %}
+            {%- assign coauthor_url = coauthor.url -%}
+            {% break %}
+          {%- endif -%}
+        {% endfor %}
+      {%- endif -%}
+
+      {%- if forloop.length > 1 -%}
+        {% if forloop.first == false -%}
+          {%- if forloop.length > 2 %}, {% elsif forloop.length == 2 %}  {% endif %}
+        {%- endif %}
+        {%- if forloop.last %} and {% endif -%}
+      {% endif %}
+      {%- if author_is_self -%}
+        <em>
+          {{- author.first }}
+          {{ author_last_html -}}
+        </em>
+      {%- else -%}
+        {%- if coauthor_url -%}
+          <a href="{{ coauthor_url }}">
+            {{- author.first }}
+            {{ author_last_html -}}
+          </a>
+        {%- else -%}
+          {{- author.first }}
+          {{ author_last_html -}}
+        {% endif %}
+      {%- endif -%}
+    {% endfor %}
+
+    {% if entry.annotation %}
+      <i
+        class="fa-solid fa-circle-info"
+        style="margin-left: 0.25rem;"
+        data-toggle="popover"
+        data-placement="top"
+        data-html="true"
+        data-content="{{ entry.annotation | escape }}"
+      >
+      </i>
+    {% endif %}
+  </div>
+
+  <!-- Action links: Paper (+ Project Page) -->
+  <div class="publinks">
+    {% if entry.html %}
+      {% if entry.html contains '://' %}
+        <a href="{{ entry.html }}" class="publink paper" target="_blank">
+          <i class="fa-solid fa-file-pdf"></i> Paper
+        </a>
+      {% else %}
+        <a href="{{ entry.html | prepend: '/assets/html/' | relative_url }}" class="publink paper">
+          <i class="fa-solid fa-file-pdf"></i> Paper
+        </a>
+      {% endif %}
+    {% endif %}
+    {% if entry.website %}
+      <a href="{{ entry.website }}" class="publink project" target="_blank">
+        <i class="fa-solid fa-link"></i> Project Page
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Hidden expandable blocks (kept for backwards-compat, not rendered by default) -->
+  {% if entry.award %}
+    <div class="award hidden" data-print-inline="true">
+      <p>{{ entry.award | markdownify }}</p>
+    </div>
+  {% endif %}
+
+  {% if entry.abstract %}
+    <div class="abstract hidden">
+      <p>{{ entry.abstract }}</p>
+    </div>
+  {% endif %}
+
+  {% if entry.bibtex_show %}
+    <div class="bibtex hidden">
+      {% highlight bibtex %}
+        {{- entry.bibtex | hideCustomBibtex -}}
+      {% endhighlight %}
+    </div>
+  {% endif %}
+
+  {% if entry.video and site.enable_video_embedding %}
+    <div class="video-embed hidden">
+      <div style="text-align: center;">
+        {% include video.liquid path=entry.video class="img-fluid" controls=true %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>

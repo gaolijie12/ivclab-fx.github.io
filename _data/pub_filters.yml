@@ -1,0 +1,19 @@
+# Publication filter categories shown as buttons on /publications/
+# Each entry needs a unique slug (used in the .pubitem class) and a label.
+# The slug must match a keyword in the bib entry's `keywords` field.
+#
+# Example bib entry:
+#   keywords = {quantum, relativity, physics}
+#   → li.pubitem will have class "quantum relativity physics"
+#
+# Add a new entry here whenever a new topic category is introduced.
+- slug: quantum
+  label: Quantum
+- slug: relativity
+  label: Relativity
+- slug: photoelectric
+  label: Photoelectric
+- slug: brownian
+  label: Brownian Motion
+- slug: wave
+  label: Wave Mechanics

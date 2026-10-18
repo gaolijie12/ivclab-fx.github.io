@@ -1,0 +1,154 @@
+/* ── Custom Nav Bar Theme ─────────────────────────────────────────────── */
+
+/* Fix only the navbar (not the header wrapper, which also contains the
+   scroll progress bar).  .fixed-top from Bootstrap is overridden here
+   so the progress bar inside <header> scrolls normally. */
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background: #fff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  opacity: 1 !important;
+  padding: 0 !important;
+}
+
+/* Body padding so content isn't hidden behind the fixed navbar */
+body.fixed-top-nav {
+  padding-top: 4.5rem !important;
+}
+.navbar > .container {
+  padding: 0.85rem 1.2rem !important;
+}
+
+/* Dark mode */
+html[data-theme="dark"] .navbar {
+  background: #1c1c1d !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Brand / site title */
+.navbar .navbar-brand {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #000 !important;
+  opacity: 1 !important;
+}
+html[data-theme="dark"] .navbar .navbar-brand {
+  color: #e8e8e8 !important;
+}
+
+/* Nav links — slightly larger, clean sans-serif */
+.navbar .nav-link {
+  font-size: 1.08rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #1a1a1a !important;
+  opacity: 1 !important;
+  transition: color 0.18s ease;
+  padding: 0.45rem 0.9rem !important;
+}
+html[data-theme="dark"] .navbar .nav-link {
+  color: #d0d0d0 !important;
+}
+.navbar .nav-link:hover {
+  color: #000 !important;
+}
+html[data-theme="dark"] .navbar .nav-link:hover {
+  color: #fff !important;
+}
+
+/* Active nav item — pill shape with soft drop shadow */
+.navbar .nav-item.active > .nav-link,
+.navbar .navbar-nav .nav-item.active > .nav-link {
+  color: #000 !important;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+}
+html[data-theme="dark"] .navbar .nav-item.active > .nav-link,
+html[data-theme="dark"] .navbar .navbar-nav .nav-item.active > .nav-link {
+  color: #fff !important;
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* All nav items vertically centered — applies to both li wrapping links and buttons */
+.navbar .navbar-nav {
+  align-items: center !important;
+}
+.navbar .navbar-nav > li {
+  display: flex;
+  align-items: center;
+}
+
+/* Search / theme / lang buttons: unified metrics, vertically centred */
+.navbar #search-toggle,
+.navbar #light-toggle,
+.navbar #al-lang-toggle {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.3rem 0.75rem !important;
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  line-height: 1.4 !important;
+  background: transparent;
+  vertical-align: middle;
+}
+
+/* Lang pill: ensure it never gets compressed out of view */
+.navbar #al-lang-toggle-container {
+  flex-shrink: 0;
+  overflow: visible;
+}
+.navbar #al-lang-toggle {
+  margin-left: 0 !important;
+}
+
+/* Theme toggle icon */
+.navbar #light-toggle {
+  position: relative;
+}
+.navbar #light-toggle i {
+  font-size: 1.1rem !important;
+  line-height: 1;
+}
+
+/* Search button: inner .nav-link span must not add its own padding */
+.navbar #search-toggle .nav-link {
+  padding: 0 !important;
+  opacity: 1 !important;
+  font-size: inherit;
+}
+
+/* Lang pill: override the inline styles injected by lang.js */
+.navbar #al-lang-toggle {
+  border: 1px solid rgba(128,128,128,.35) !important;
+  border-radius: 0.5rem !important;
+  font-size: 0.92rem !important;
+  gap: 0.3rem !important;
+  white-space: nowrap;
+  overflow: visible;
+}
+.navbar #al-lang-toggle .lang-opt {
+  font-size: 0.92rem !important;
+}
+
+/* Hover */
+.navbar #search-toggle:hover,
+.navbar #light-toggle:hover,
+.navbar #al-lang-toggle:hover {
+  opacity: 1;
+}
+
+/* Night-mode icon: nudge up so it aligns with the nav items, and shift right */
+.navbar #light-toggle {
+  margin: -0.3rem 0.4rem 0.3rem 0.6rem !important;
+}

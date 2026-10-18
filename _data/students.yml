@@ -1,0 +1,63 @@
+# Student & postdoc list for the People page.
+# Each entry needs: name (zh), name_en, role (zh), role_en, year, image (in /assets/img/).
+# Optional: link (personal homepage / publication page) — when set, the whole card becomes a clickable link (opens in a new tab).
+# Add / reorder / remove freely — the People page renders the grid automatically.
+
+students:
+  - name: 王小明
+    name_en: Xiaoming Wang
+    role: 博士生
+    role_en: PhD Student
+    year: "2023"
+    image: 2.jpg
+    link: https://cs.cqut.edu.cn/
+
+  - name: 李小红
+    name_en: Xiaohong Li
+    role: 硕士生
+    role_en: MSc Student
+    year: "2024"
+    image: 3.jpg
+    link: https://cs.cqut.edu.cn/
+
+  - name: 张伟
+    name_en: Wei Zhang
+    role: 博士后
+    role_en: Postdoc
+    year: "2024"
+    image: 4.jpg
+    link: https://cs.cqut.edu.cn/
+
+  - name: 刘芳
+    name_en: Fang Liu
+    role: 博士生
+    role_en: PhD Student
+    year: "2024"
+    image: 5.jpg
+    link: https://cs.cqut.edu.cn/
+
+  - name: 陈强
+    name_en: Qiang Chen
+    role: 硕士生
+    role_en: MSc Student
+    year: "2025"
+    image: 6.jpg
+    link: https://cs.cqut.edu.cn/
+
+  - name: 赵雪
+    name_en: Xue Zhao
+    role: 博士生
+    role_en: PhD Student
+    year: "2025"
+    image: 7.jpg
+    link: https://cs.cqut.edu.cn/
+
+# ── 已毕业的硕士生 ──────────────────────────────────────────────────
+graduated_students:
+  - name: 王小明
+    name_en: Xiaoming Wang
+    role: 已毕业硕士生
+    role_en: Graduated MSc
+    year: "2024"
+    image: 9.jpg
+    link: https://cs.cqut.edu.cn/
