@@ -111,7 +111,7 @@ mentor:
 }
 /* main.css sets `div { color: var(--global-text-color) }` which overrides
    the container color on inner divs. Target the direct children explicitly. */
-.mentor-intro > div[data-lang] { color: var(--global-text-color-light); }
+.mentor-intro > div[data-lang] { color: var(--global-text-color-light) !important; }
 
 /* ── 第三部分：学生小网格（4 列） ─────────────── */
 .students-grid {
