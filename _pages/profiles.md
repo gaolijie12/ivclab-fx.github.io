@@ -63,7 +63,7 @@ mentor:
 .group-photo figcaption {
   text-align: center;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--global-text-color-light);
   margin-top: 0.4rem;
 }
 
@@ -101,19 +101,14 @@ mentor:
 .mentor-photo a.member-link { text-decoration: none; display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
 .mentor-photo a.member-link img { width: 180px; height: 180px; object-fit: cover; border-radius: 0.5rem; }
 .mentor-photo a.member-link .member-name:hover { text-decoration: underline; text-underline-offset: 2px; }
-.mentor-photo .member-title { font-size: 0.95rem;  color: #495057; }
-.mentor-photo .member-bio   { font-size: 0.85rem;  color: #6c757d; }
+.mentor-photo .member-title { font-size: 0.95rem;  color: var(--global-text-color-light); }
+.mentor-photo .member-bio   { font-size: 0.85rem;  color: var(--global-text-color-light); }
 .mentor-intro {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: #495057;
+  color: var(--global-text-color-light);
   white-space: pre-line;
   margin-top: -1rem;
-}
-@media (prefers-color-scheme: dark) {
-  .mentor-photo .member-title,
-  .mentor-photo .member-bio { color: #adb5bd; }
-  .mentor-intro             { color: #ced4da; }
 }
 
 /* ── 第三部分：学生小网格（4 列） ─────────────── */
@@ -137,7 +132,7 @@ mentor:
   display: block;
 }
 .student-card .student-name { font-weight: 600; font-size: 1rem; }
-.student-card .student-role { font-size: 0.85rem; color: #495057; margin-top: 0.15rem; }
+.student-card .student-role { font-size: 0.85rem; color: var(--global-text-color-light); margin-top: 0.15rem; }
 /* Card with a link: whole card is clickable */
 .student-card a.student-card-link {
   text-decoration: none;
@@ -147,9 +142,6 @@ mentor:
 .student-card a.student-card-link .student-name:hover {
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-@media (prefers-color-scheme: dark) {
-  .student-card .student-role { color: #adb5bd; }
 }
 </style>
 
