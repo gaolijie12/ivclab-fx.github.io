@@ -106,6 +106,7 @@ mentor:
 .mentor-intro {
   font-size: 0.95rem;
   line-height: 1.7;
+  white-space: pre-line;
   margin-top: -1rem;
 }
 /* main.css sets `div { color: var(--global-text-color) }` which overrides
