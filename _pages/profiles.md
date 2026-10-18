@@ -106,10 +106,12 @@ mentor:
 .mentor-intro {
   font-size: 0.95rem;
   line-height: 1.7;
-  color: var(--global-text-color-light);
   white-space: pre-line;
   margin-top: -1rem;
 }
+/* main.css sets `div { color: var(--global-text-color) }` which overrides
+   the container color on inner divs. Target the direct children explicitly. */
+.mentor-intro > div[data-lang] { color: var(--global-text-color-light); }
 
 /* ── 第三部分：学生小网格（4 列） ─────────────── */
 .students-grid {
@@ -132,7 +134,8 @@ mentor:
   display: block;
 }
 .student-card .student-name { font-weight: 600; font-size: 1rem; }
-.student-card .student-role { font-size: 0.85rem; color: var(--global-text-color-light); margin-top: 0.15rem; }
+.student-card .student-role { font-size: 0.85rem; color: #495057; margin-top: 0.15rem; }
+html[data-theme="dark"] .student-card .student-role { color: #adb5bd; }
 /* Card with a link: whole card is clickable */
 .student-card a.student-card-link {
   text-decoration: none;
