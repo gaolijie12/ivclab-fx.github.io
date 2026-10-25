@@ -4,12 +4,12 @@
 # Add / reorder / remove freely — the People page renders the grid automatically.
 
 students:
-  - name: 王小明
+  - name: Test
     name_en: Xiaoming Wang
     role: 博士生
     role_en: PhD Student
     year: "2023"
-    image: 2.jpg
+    image: test.jpg
     link: https://cs.cqut.edu.cn/
 
   - name: 李小红
