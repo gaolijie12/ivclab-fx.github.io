@@ -1,0 +1,135 @@
+/* IVC LAB / Lingfeng. Brand artwork keeps its full flourishes at every size. */
+:root {
+  --ivc-navy: #142b49;
+  --ivc-gold: #aa834a;
+  --ivc-paper: #fbfaf6;
+}
+.ivc-brand-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  object-fit: contain;
+}
+/* One silhouette in both themes: no replacement-image flash or shape drift. */
+html[data-theme="dark"] .ivc-brand-image {
+  filter: brightness(0) invert(1);
+}
+.navbar .ivc-navbar-brand {
+  display: block;
+  flex: 0 0 auto;
+  width: 180px;
+  padding: 0;
+  margin: 0 1.25rem 0 0;
+  line-height: 1;
+}
+.navbar > .container {
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+}
+.ivc-navbar-brand:focus-visible {
+  outline: 2px solid var(--ivc-gold);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+.post-header .ivc-home-brand {
+  width: min(100%, 400px);
+  margin: 0 0 0.4rem;
+  line-height: 1;
+}
+@media (min-width: 576px) and (max-width: 991px) {
+  .navbar .ivc-navbar-brand {
+    width: 132px;
+    margin-right: 0.5rem;
+  }
+  .navbar .nav-link {
+    padding-left: 0.55rem !important;
+    padding-right: 0.55rem !important;
+  }
+  .navbar #search-toggle,
+  .navbar #light-toggle,
+  .navbar #al-lang-toggle {
+    padding-left: 0.4rem !important;
+    padding-right: 0.4rem !important;
+  }
+}
+@media (max-width: 575px) {
+  .navbar .ivc-navbar-brand {
+    width: 156px;
+    margin-right: auto;
+  }
+  .post-header .ivc-home-brand {
+    width: min(100%, 360px);
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Collapse before the English navigation would wrap beneath the brand. */
+@media (min-width: 576px) and (max-width: 767px) {
+  .navbar.navbar-expand-sm .navbar-toggler {
+    display: block;
+  }
+  .navbar.navbar-expand-sm .navbar-collapse {
+    flex-basis: 100%;
+    width: 100%;
+    display: none !important;
+  }
+  .navbar.navbar-expand-sm .navbar-collapse.show {
+    display: flex !important;
+  }
+  .navbar.navbar-expand-sm .navbar-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* Homepage composition inspired by AdvML: wordmark above, introduction + symbol below. */
+.ivc-brand-image--wordmark {
+  aspect-ratio: 1390 / 435;
+}
+.ivc-brand-image--symbol {
+  aspect-ratio: 1;
+}
+.post-header .ivc-home-subtitle {
+  margin: 0 0 1rem;
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--ivc-navy);
+}
+html[data-theme="dark"] .ivc-home-subtitle {
+  color: #e8e8e8;
+}
+.ivc-home-intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 248px;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 1.5rem;
+}
+.ivc-home-copy {
+  min-width: 0;
+}
+.ivc-home-symbol {
+  width: 100%;
+  margin: 0;
+}
+@media (max-width: 767px) {
+  .ivc-home-intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
+  .ivc-home-symbol {
+    grid-row: 1;
+    width: 148px;
+    justify-self: center;
+  }
+}
+
+/* Do not reserve the longer hidden biography on a narrow screen. */
+@media (max-width: 767px) {
+  html[data-lang="en"] .ivc-home-copy .bio-i18n > [data-lang="zh"],
+  html[data-lang="zh"] .ivc-home-copy .bio-i18n > [data-lang="en"] {
+    display: none !important;
+  }
+}

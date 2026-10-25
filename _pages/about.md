@@ -3,10 +3,7 @@ layout: about
 title: about
 permalink: /
 
-profile:
-  align: right
-  image: ivc_lab_logo.png
-  image_circular: false # crops the image to make it circular
+profile: false # The custom about layout positions the independent brand symbol.
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true # includes social icons at the bottom of the page
@@ -16,6 +13,7 @@ announcements:
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
   limit: 8 # leave blank to include all the news in the `_news` folder
 ---
+
 <style>
 /* News section: scroll only when content overflows */
 .news {
@@ -81,6 +79,9 @@ announcements:
 .bio-i18n {
   display: grid;
 }
+.bio-i18n > [data-lang] > :last-child {
+  margin-bottom: 0;
+}
 .bio-i18n > [data-lang] {
   grid-area: 1 / 1;
 }
@@ -90,48 +91,6 @@ html[data-lang="zh"] .bio-i18n > [data-lang="en"] {
   visibility: hidden;
 }
 
-/* Desktop two-column grid: bio text col 1 (1fr), profile logo col 2 (fixed 320px) */
-@media (min-width: 768px) {
-  .post > article {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 0 2rem;
-  }
-  /* Bio container: col-1 */
-  .post > article > .bio-i18n {
-    grid-column: 1;
-    grid-row: 1;
-  }
-  /* Profile: col-2, override theme's .profile{width:30%}, vertically centered */
-  .post > article > .profile.float-right {
-    float: none;
-    width: 100% !important;
-    grid-column: 2;
-    grid-row: 1;
-    align-self: center;
-  }
-  /* All later sections span both columns */
-  .post > article > h2,
-  .post > article > .news,
-  .post > article > .publications,
-  .post > article > .social {
-    grid-column: 1 / -1;
-  }
-  /* Center the crop-marked figure + logo image inside the profile div */
-  .post > article > .profile.float-right > figure {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-  }
-  .post > article > .profile.float-right > figure img {
-    width: 100%;
-    height: auto;
-  }
-  .post > article > h2:first-of-type {
-    margin-top: 1rem;
-  }
-}
 </style>
 
 <div class="bio-i18n">

@@ -1,0 +1,32 @@
+{% comment %}Reuse approved artwork: SVG is a viewport onto the PNG, not a vector redraw.{% endcomment %}
+{% if include.variant == 'wordmark' %}
+  <svg
+    class="ivc-brand-image ivc-brand-image--wordmark"
+    viewBox="720 168 1390 435"
+    width="1390"
+    height="435"
+    role="img"
+    aria-label="IVC LAB"
+    focusable="false"
+  >
+    <image href="{{ '/assets/img/brand/ivc-lab-horizontal.png' | relative_url | bust_file_cache }}" width="2172" height="724" />
+  </svg>
+{% elsif include.variant == 'symbol' %}
+  <img
+    class="ivc-brand-image ivc-brand-image--symbol"
+    src="{{ '/assets/img/brand/ivc-lab-icon.png' | relative_url | bust_file_cache }}"
+    width="1254"
+    height="1254"
+    alt=""
+    decoding="async"
+  >
+{% else %}
+  <img
+    class="ivc-brand-image"
+    src="{{ '/assets/img/brand/ivc-lab-horizontal.png' | relative_url | bust_file_cache }}"
+    width="2172"
+    height="724"
+    alt="IVC LAB"
+    decoding="async"
+  >
+{% endif %}

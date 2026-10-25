@@ -70,7 +70,7 @@ html[data-theme="dark"] .navbar .nav-link:hover {
   font-weight: 600;
   background: rgba(0, 0, 0, 0.06);
   border-radius: 2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.10);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 html[data-theme="dark"] .navbar .nav-item.active > .nav-link,
 html[data-theme="dark"] .navbar .navbar-nav .nav-item.active > .nav-link {
@@ -121,24 +121,31 @@ html[data-theme="dark"] .navbar .navbar-nav .nav-item.active > .nav-link {
   line-height: 1;
 }
 
-/* Search button: inner .nav-link span must not add its own padding */
+/* Keep the search entry borderless and hide its shortcut hint on every platform. */
+.navbar #search-toggle {
+  border: 0 !important;
+  border-radius: 4px;
+}
 .navbar #search-toggle .nav-link {
   padding: 0 !important;
   opacity: 1 !important;
-  font-size: inherit;
+  font-size: 0;
+  line-height: 1;
+}
+.navbar #search-toggle .nav-link i {
+  font-size: 1rem;
+  line-height: 1;
 }
 
-/* Lang pill: override the inline styles injected by lang.js */
+/* Single-label language button: stable width in both languages. */
 .navbar #al-lang-toggle {
-  border: 1px solid rgba(128,128,128,.35) !important;
-  border-radius: 0.5rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   font-size: 0.92rem !important;
-  gap: 0.3rem !important;
+  min-width: 3.8rem;
   white-space: nowrap;
   overflow: visible;
-}
-.navbar #al-lang-toggle .lang-opt {
-  font-size: 0.92rem !important;
 }
 
 /* Hover */
