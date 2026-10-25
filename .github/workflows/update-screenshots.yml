@@ -35,7 +35,7 @@ concurrency:
 
 jobs:
   screenshots:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # This repo is a template; without the guard every generated site would
     # burn Actions minutes screenshotting its own pages into a README it does
     # not have.
