@@ -66,8 +66,6 @@ let applyTheme = () => {
 
   document.documentElement.setAttribute("data-theme", theme);
 
-  updateProfileLogo(theme);
-
   // Add class to tables.
   let tables = document.getElementsByTagName("table");
   for (let i = 0; i < tables.length; i++) {
@@ -304,54 +302,18 @@ let determineComputedTheme = () => {
   }
 };
 
-let updateProfileLogo = (theme) => {
-  var img = document.querySelector(".profile img");
-  if (!img) return;
-  var key = theme === "dark" ? "dark" : "light";
-  if (img.getAttribute("data-logo-theme") === key) return;
-
-  var targetSrc = theme === "dark"
-    ? "/assets/img/ivc_lab_logo_dark.png"
-    : "/assets/img/ivc_lab_logo.png";
-
-  img.setAttribute("data-logo-theme", key);
-
-  // Preloaded image – swap instantly, no network wait
-  var loader = new Image();
-  loader.src = targetSrc;
-
-  // Animate out: 130ms blur + scale + opacity
-  img.style.transition =
-    "opacity .13s cubic-bezier(0.4,0,0.2,1), filter .13s cubic-bezier(0.4,0,0.2,1), transform .13s cubic-bezier(0.4,0,0.2,1)";
-  img.style.opacity = "0";
-  img.style.filter = "blur(6px)";
-  img.style.transform = "scale(0.97)";
-
-  setTimeout(function () {
-    img.src = targetSrc;
-    img.style.transition =
-      "opacity .18s cubic-bezier(0.4,0,0.2,1), filter .18s cubic-bezier(0.4,0,0.2,1), transform .18s cubic-bezier(0.4,0,0.2,1)";
-    img.style.opacity = "1";
-    img.style.filter = "blur(0)";
-    img.style.transform = "scale(1)";
-  }, 130);
-};
-
 let initTheme = () => {
   let themeSetting = determineThemeSetting();
 
   setThemeSetting(themeSetting);
 
-// Add event listener to the theme toggle button.
+  // Add event listener to the theme toggle button.
   document.addEventListener("DOMContentLoaded", function () {
     const mode_toggle = document.getElementById("light-toggle");
 
     mode_toggle.addEventListener("click", function () {
       toggleThemeSetting();
     });
-
-    // Apply the logo on initial page load (DOM is now ready)
-    updateProfileLogo(determineComputedTheme());
   });
 
   // Add event listener to the system theme preference change.

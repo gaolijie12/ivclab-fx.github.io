@@ -1,19 +1,20 @@
 /*
- * al-folio i18n language toggle (EN / 中)
+ * al-folio i18n language toggle (target language)
  *
  * Injected by _plugins/al_lang_injector.rb before </body> on every page.
- * - inserts a compact EN|中 pill into the nav bar
+ * - inserts a single-label target-language button into the nav bar
  * - toggles content blocks marked <div data-lang="en">/<div data-lang="zh">
  * - rewrites nav labels, a small set of UI strings and the page title
- * - persists the preference in localStorage("al_lang"), default: en
+ * - persists the preference in localStorage("al_lang_v2"), default: zh
  *
  * No template overrides: the gem's markup is only read, never replaced.
  */
 (function () {
   "use strict";
 
-  var STORAGE_KEY = "al_lang";
-  var DEFAULT_LANG = "en";
+  var STORAGE_KEY = "al_lang_v2"; // Ignore the previous English-default cache.
+  var DEFAULT_LANG = "zh";
+  var currentLang = storedLang();
 
   // Nav bar labels, keyed by path segment ("/" => "", "/publications/" => "publications").
   // Links whose path is not in the map are left untouched.
@@ -80,11 +81,9 @@
       'html[data-lang="zh"] [data-lang="en"]{display:none!important}' +
       "#al-lang-toggle-container{display:flex;align-items:center}" +
       "#al-lang-toggle{display:inline-flex;align-items:center;gap:.25rem;" +
-      "border:1px solid rgba(128,128,128,.4);border-radius:9999px;" +
+      "border:0;border-radius:0;box-shadow:none;" +
       "padding:.1rem .5rem;font-size:.78em;line-height:1.4;cursor:pointer;" +
       "color:inherit;background:transparent;vertical-align:middle;white-space:nowrap}" +
-      "#al-lang-toggle .lang-opt{color:inherit;opacity:.55;transition:opacity .15s}" +
-      "#al-lang-toggle .lang-opt.active{opacity:1;font-weight:600}" +
       ".profile figure img{box-shadow:none!important;border-radius:0!important;transition:opacity .26s ease}" +
       "@media (max-width: 767px){#al-lang-toggle-container{align-items:flex-start;margin-top:.5rem}}";
     document.head.appendChild(style);
@@ -100,13 +99,8 @@
     var btn = document.createElement("button");
     btn.id = "al-lang-toggle";
     btn.type = "button";
-    btn.setAttribute("aria-label", "Toggle language / 切换语言");
-    btn.innerHTML =
-      '<span class="lang-opt" data-opt="en">EN</span>' +
-      '<span aria-hidden="true" style="opacity:.4">|</span>' +
-      '<span class="lang-opt" data-opt="zh">中</span>';
     btn.addEventListener("click", function () {
-      applyLang(storedLang() === "en" ? "zh" : "en");
+      applyLang(currentLang === "en" ? "zh" : "en");
     });
     li.appendChild(btn);
 
@@ -125,20 +119,18 @@
         menu.appendChild(li);
       }
     }
-    refreshButton(storedLang());
+    refreshButton(currentLang);
   }
 
   function refreshButton(lang) {
     var btn = document.getElementById("al-lang-toggle");
     if (!btn) return;
-    var opts = btn.querySelectorAll(".lang-opt");
-    for (var i = 0; i < opts.length; i++) {
-      if (opts[i].getAttribute("data-opt") === lang) {
-        opts[i].classList.add("active");
-      } else {
-        opts[i].classList.remove("active");
-      }
-    }
+    var label = lang === "zh" ? "EN" : "中文";
+    var hint = lang === "zh" ? "切换到英文" : "Switch to Chinese";
+    btn.textContent = label;
+    btn.setAttribute("aria-label", hint);
+    btn.setAttribute("title", hint);
+    btn.setAttribute("lang", lang === "zh" ? "en" : "zh-CN");
   }
 
   // Directory prefix of the site baseurl, read from the <base> tag
@@ -240,6 +232,7 @@
   }
 
   function applyLang(lang) {
+    currentLang = lang;
     try {
       localStorage.setItem(STORAGE_KEY, lang);
     } catch (e) {
@@ -258,10 +251,10 @@
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       mountButton();
-      applyLang(storedLang());
+      applyLang(currentLang);
     });
   } else {
     mountButton();
-    applyLang(storedLang());
+    applyLang(currentLang);
   }
 })();

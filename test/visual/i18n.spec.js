@@ -1,89 +1,127 @@
-// i18n language-toggle spec.
-//
-// Unlike the other visual specs (which rely on the bundled webServer at
-// :4000 under the /al-folio baseurl used by the upstream starter), this fork
-// is a personal site with baseurl "" and is normally served by Docker on :8080.
-// Run against the running Docker build:
-//
-//   NO_WEBSERVER=1 I18N_BASE=http://127.0.0.1:8080 npx playwright test test/visual/i18n.spec.js
-//
-// It drives the real client-side toggle in assets/js/lang.js: switch to 中,
-// verify the DOM flips and the preference persists across reload, switch back.
-//
-// These tests run against a live Docker build that loads third-party CDNs
-// (fonts, icons), so we drive on DOMContentLoaded + an explicit wait for the
-// injected toggle instead of the full `load` event, which can stall on slow
-// external requests and flake the suite.
+// Language-button integration tests for this user site, served by Docker on :8080.
+// NO_WEBSERVER=1 I18N_BROWSER_CHANNEL=msedge npx playwright test --config test/visual/playwright.config.js test/visual/i18n.spec.js
 const { test, expect } = require("@playwright/test");
+const path = require("path");
 
 const BASE = process.env.I18N_BASE || "http://127.0.0.1:8080";
-
 test.use({ baseURL: BASE });
+const channel = process.env.I18N_BROWSER_CHANNEL || (process.env.USE_SYSTEM_CHROME === "1" ? "chrome" : undefined);
+if (channel) test.use({ browserName: "chromium", channel });
 
-// This fork is a personal site (baseurl "") normally served by Docker on :8080,
-// and does not require the bundled chromium. Prefer the system Chrome install
-// when available (works on machines without a Playwright browser download).
-const useSystemChrome = process.env.USE_SYSTEM_CHROME === "1";
-if (useSystemChrome) {
-  test.use({ channel: "chrome" });
+async function visit(page, route = "/") {
+  await page.goto(route, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#al-lang-toggle", { state: "attached" });
 }
 
-async function settleOnHome(page) {
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.waitForSelector("#al-lang-toggle", { timeout: 15000 });
+async function openMenu(page) {
+  const menu = page.locator('button[aria-controls="navbarNav"]');
+  if ((await menu.isVisible()) && (await menu.getAttribute("aria-expanded")) !== "true") await menu.click();
 }
 
-test.describe("i18n language toggle", () => {
-  test.beforeEach(async ({ page }) => {
-    // Start from a clean, default-English state on every run.
-    await settleOnHome(page);
-    await page.evaluate(() => localStorage.removeItem("al_lang"));
-  });
+async function expectLanguage(page, language) {
+  await expect(page.locator("html")).toHaveAttribute("data-lang", language);
+  await expect(page.locator("html")).toHaveAttribute("lang", language === "zh" ? "zh-CN" : "en");
+  await expect(page.locator("#al-lang-toggle")).toHaveText(language === "zh" ? "EN" : "中文");
+  await expect(page.locator("#al-lang-toggle")).toHaveAttribute("aria-label", language === "zh" ? "切换到英文" : "Switch to Chinese");
+}
 
-  test("nav toggle is present and defaults to English", async ({ page }) => {
-    await settleOnHome(page);
+test.describe("Chinese default and target-language button", () => {
+  test("first visit defaults to Chinese and shows only EN", async ({ page }) => {
+    await visit(page);
+    await expectLanguage(page, "zh");
+    await openMenu(page);
     await expect(page.locator("#al-lang-toggle")).toBeVisible();
-    await expect(page.locator("html")).toHaveAttribute("data-lang", "en");
-    // Nav labels are English by default (scoped to the navbar, exact match).
-    const pubs = page.locator("#navbar").getByRole("link", { name: "publications", exact: true });
-    await expect(pubs).toBeVisible();
-  });
-
-  test("clicking 中 switches the page to Chinese and persists it", async ({ page }) => {
-    await settleOnHome(page);
-
-    // Chinese blocks exist but are hidden while the language is en.
-    await expect(page.locator('[data-lang="zh"]').first()).toBeHidden();
-
-    await page.click('#al-lang-toggle .lang-opt[data-opt="zh"]');
-
-    await expect(page.locator("html")).toHaveAttribute("data-lang", "zh");
-    await expect(page.locator("html")).toHaveAttribute("lang", "zh-CN");
-    // Chinese content is now visible, English hidden.
-    await expect(page.locator('[data-lang="zh"]').first()).toBeVisible();
-    await expect(page.locator('[data-lang="en"]').first()).toBeHidden();
-    // Nav labels flip to Chinese (scoped to the navbar; "论文" is the exact nav
-    // label, distinct from the "精选论文" section link elsewhere on the page).
+    await expect(page.locator("#al-lang-toggle").locator("span")).toHaveCount(0);
     await expect(page.locator("#navbar").getByRole("link", { name: "论文", exact: true })).toBeVisible();
-    // Document title is localized.
-    await expect(page).toHaveTitle(/关于/);
-
-    // Preference survives a reload.
-    await page.reload({ waitUntil: "domcontentloaded" });
-    await page.waitForSelector('#al-lang-toggle .lang-opt[data-opt="zh"]');
-    await expect(page.locator("html")).toHaveAttribute("data-lang", "zh");
-    await expect(page.locator('[data-lang="zh"]').first()).toBeVisible();
+    await expect(page.locator('main [data-lang="en"]').first()).toBeHidden();
   });
 
-  test("switching back to English restores the original text", async ({ page }) => {
-    await settleOnHome(page);
-    await page.click('#al-lang-toggle .lang-opt[data-opt="zh"]');
-    await expect(page.locator("html")).toHaveAttribute("data-lang", "zh");
+  test("both languages persist across reload and page navigation", async ({ page }) => {
+    await visit(page);
+    await openMenu(page);
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "en");
+    await expect(page.locator('main [data-lang="zh"]').first()).toBeHidden();
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expectLanguage(page, "en");
+    await visit(page, "/people/");
+    await expectLanguage(page, "en");
+    await openMenu(page);
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "zh");
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expectLanguage(page, "zh");
+    await visit(page, "/publications/");
+    await expectLanguage(page, "zh");
+  });
 
-    await page.click('#al-lang-toggle .lang-opt[data-opt="en"]');
-    await expect(page.locator("html")).toHaveAttribute("data-lang", "en");
-    await expect(page.locator('[data-lang="en"]').first()).toBeVisible();
-    await expect(page.locator('[data-lang="zh"]').first()).toBeHidden();
-    await expect(page).toHaveTitle(/about/i);
+  test("legacy automatically saved English does not override the new default", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("al_lang", "en"));
+    await visit(page);
+    await expectLanguage(page, "zh");
+    await openMenu(page);
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "en");
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await expectLanguage(page, "en");
+  });
+
+  test("language switching preserves the current route, query and anchor", async ({ page }) => {
+    await visit(page, "/people/?preview=language#mentor");
+    await openMenu(page);
+    const originalUrl = page.url();
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "en");
+    expect(page.url()).toBe(originalUrl);
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "zh");
+    expect(page.url()).toBe(originalUrl);
+  });
+
+  test("keyboard switches both ways and the button width stays stable", async ({ page }) => {
+    await visit(page);
+    await openMenu(page);
+    const button = page.locator("#al-lang-toggle");
+    await button.focus();
+    const width = (await button.boundingBox()).width;
+    await page.keyboard.press("Enter");
+    await expectLanguage(page, "en");
+    expect(Math.abs((await button.boundingBox()).width - width)).toBeLessThan(1);
+    await page.keyboard.press("Space");
+    await expectLanguage(page, "zh");
+  });
+
+  test("both directions work even when localStorage is blocked", async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, "localStorage", {
+        get() {
+          throw new DOMException("Storage blocked", "SecurityError");
+        },
+      });
+    });
+    await visit(page);
+    await expectLanguage(page, "zh");
+    await openMenu(page);
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "en");
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "zh");
+  });
+
+  test("button remains usable in light and dark mode", async ({ page }, testInfo) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await visit(page);
+    await openMenu(page);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expectLanguage(page, "zh");
+    await page.screenshot({ path: path.join("output/playwright", `language-${testInfo.project.name}-chinese.png`) });
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "en");
+    await page.locator("#light-toggle").click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator("#al-lang-toggle")).toBeVisible();
+    await page.screenshot({ path: path.join("output/playwright", `language-${testInfo.project.name}-english-dark.png`) });
+    await page.locator("#al-lang-toggle").click();
+    await expectLanguage(page, "zh");
   });
 });
